@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Student Management System</title>
+  <meta name="description" content="Sign in to the Student Management System to manage students, departments, and more." />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🎓</div>
+      <div>
+        <div class="auth-logo-text">Student<span>MS</span></div>
+        <div style="font-size:11px;color:var(--text-muted);">Management System</div>
+      </div>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your account to continue</p>
+
+    <!-- Error Alert -->
+    <div id="login-error" class="alert alert-error" style="display:none;">
+      <span class="alert-icon">⚠️</span>
+      <span id="login-error-text"></span>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input id="email" name="email" type="email" class="form-control"
+               placeholder="arpit@example.com" required autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input id="password" name="password" type="password" class="form-control"
+               placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+
+      <button id="login-btn" type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">
+        <div class="btn-spinner"></div>
+        <span class="btn-text">Sign in →</span>
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a href="/register.html">Create one</a>
+    </p>
+
+    <p class="auth-footer" style="margin-top:10px;font-size:11px;opacity:.5;">
+      💡 Default admin: create via DB or register + manually set role to ADMIN
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import { setToken, requireGuest, showToast, setLoading, api } from '/js/api.js';
+
+  requireGuest();   // redirect to dashboard if already logged in
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const errDiv  = document.getElementById('login-error');
+    const errText = document.getElementById('login-error-text');
+    errDiv.style.display = 'none';
+
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      errText.textContent = 'Please fill in all fields.';
+      errDiv.style.display = 'flex';
+      return;
+    }
+
+    setLoading(btn, true);
+    try {
+      const data = await api.post('/api/v1/auth/login', { email, password });
+      setToken(data.token);
+      showToast(`Welcome back! Logged in as ${data.role}`, 'success');
+      setTimeout(() => window.location.href = '/dashboard.html', 600);
+    } catch (err) {
+      errText.textContent = err.message || 'Invalid credentials. Please try again.';
+      errDiv.style.display = 'flex';
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+
+  // Press Enter in any field submits
+  document.querySelectorAll('.form-control').forEach(el => {
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('login-form').requestSubmit();
+    });
+  });
+</script>
+</body>
+</html>

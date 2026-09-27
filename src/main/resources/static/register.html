@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Student Management System</title>
+  <meta name="description" content="Create your student account to access the Student Management System." />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:540px;">
+
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🎓</div>
+      <div>
+        <div class="auth-logo-text">Student<span>MS</span></div>
+        <div style="font-size:11px;color:var(--text-muted);">Create your account</div>
+      </div>
+    </div>
+
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Fill in your details to get started</p>
+
+    <div id="reg-alert" class="alert" style="display:none;">
+      <span class="alert-icon" id="reg-alert-icon"></span>
+      <span id="reg-alert-text"></span>
+    </div>
+
+    <form id="reg-form" novalidate>
+
+      <!-- Account credentials -->
+      <div class="auth-section-title">Account</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="name">Full name</label>
+          <input id="name" name="name" type="text" class="form-control"
+                 placeholder="Arpit Sahu" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <input id="email" name="email" type="email" class="form-control"
+                 placeholder="arpit@example.com" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input id="password" name="password" type="password" class="form-control"
+                 placeholder="Min. 8 characters" required minlength="8" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="course">Course / Programme</label>
+          <input id="course" name="course" type="text" class="form-control"
+                 placeholder="B.Tech" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="departmentId">Department</label>
+        <select id="departmentId" name="departmentId" class="form-control" required>
+          <option value="">Select department…</option>
+        </select>
+      </div>
+
+      <!-- Address -->
+      <div class="auth-section-title">Address</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="city">City</label>
+          <input id="city" name="city" type="text" class="form-control" placeholder="Bangalore" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="state">State</label>
+          <input id="state" name="state" type="text" class="form-control" placeholder="Karnataka" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="country">Country</label>
+        <input id="country" name="country" type="text" class="form-control" placeholder="India" />
+      </div>
+
+      <button id="reg-btn" type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">
+        <div class="btn-spinner"></div>
+        <span class="btn-text">Create Account →</span>
+      </button>
+    </form>
+
+    <p class="auth-footer">Already have an account? <a href="/index.html">Sign in</a></p>
+  </div>
+</div>
+
+<script type="module">
+  import { requireGuest, showToast, setLoading, api } from '/js/api.js';
+
+  requireGuest();
+
+  // Load departments into the select dropdown
+  async function loadDepartments() {
+    try {
+      const depts = await api.get('/api/departments');
+      const select = document.getElementById('departmentId');
+      depts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.name;
+        select.appendChild(opt);
+      });
+    } catch {
+      // If no departments yet, show placeholder only
+    }
+  }
+
+  loadDepartments();
+
+  function showAlert(msg, type = 'error') {
+    const div  = document.getElementById('reg-alert');
+    const text = document.getElementById('reg-alert-text');
+    const icon = document.getElementById('reg-alert-icon');
+    div.className = `alert alert-${type}`;
+    icon.textContent = type === 'error' ? '⚠️' : '✅';
+    text.textContent = msg;
+    div.style.display = 'flex';
+  }
+
+  document.getElementById('reg-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('reg-btn');
+    document.getElementById('reg-alert').style.display = 'none';
+
+    const name         = document.getElementById('name').value.trim();
+    const email        = document.getElementById('email').value.trim();
+    const password     = document.getElementById('password').value;
+    const course       = document.getElementById('course').value.trim();
+    const departmentId = document.getElementById('departmentId').value;
+    const city         = document.getElementById('city').value.trim();
+    const state        = document.getElementById('state').value.trim();
+    const country      = document.getElementById('country').value.trim();
+
+    if (!name || !email || !password || !course || !departmentId) {
+      showAlert('Please fill in all required fields.'); return;
+    }
+    if (password.length < 8) {
+      showAlert('Password must be at least 8 characters.'); return;
+    }
+
+    const body = {
+      name, email, password, course,
+      departmentId: parseInt(departmentId),
+      addressRequestDto: city ? { city, state, country } : null,
+    };
+
+    setLoading(btn, true);
+    try {
+      await api.post('/api/v1/auth/register', body);
+      showAlert('Account created! Redirecting to login…', 'success');
+      setTimeout(() => window.location.href = '/index.html', 1800);
+    } catch (err) {
+      showAlert(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+</script>
+</body>
+</html>

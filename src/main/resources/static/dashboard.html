@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Student Management System</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-ring"></div>
+  <div class="loading-text">Loading dashboard…</div>
+</div>
+
+<div class="app-layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🎓</div>
+      <div>
+        <div class="sidebar-brand-name">StudentMS</div>
+        <div class="sidebar-brand-sub">Management System</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-label">Main</div>
+
+      <div class="nav-item active" id="nav-students" onclick="switchSection('students')">
+        <span class="nav-icon">👨‍🎓</span>
+        <span>Students</span>
+        <span class="nav-badge" id="nav-student-count">0</span>
+      </div>
+
+      <div class="nav-item" id="nav-departments" onclick="switchSection('departments')">
+        <span class="nav-icon">🏛️</span>
+        <span>Departments</span>
+        <span class="nav-badge" id="nav-dept-count">0</span>
+      </div>
+
+      <div class="sidebar-nav-label">Resources</div>
+      <div class="nav-item" onclick="window.open('/swagger-ui.html','_blank')">
+        <span class="nav-icon">📄</span>
+        <span>API Docs</span>
+        <span style="font-size:10px;color:var(--text-muted);margin-left:auto;">↗</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="user-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="user-email">Loading…</div>
+          <div class="sidebar-user-role" id="user-role">—</div>
+        </div>
+        <button class="btn-logout" title="Logout" onclick="logout()">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ─────────────────────────────────────────────────────── -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div>
+        <div class="page-title" id="page-title">Students</div>
+        <div class="page-subtitle" id="page-subtitle">Manage all student records</div>
+      </div>
+      <div class="top-bar-actions">
+        <span id="role-badge" class="badge"></span>
+        <button id="btn-add-student" class="btn btn-primary btn-sm"
+                onclick="openStudentModal()" title="Add new student" style="display:none;">
+          + Add Student
+        </button>
+        <button id="btn-add-dept" class="btn btn-primary btn-sm"
+                onclick="openDeptModal()" title="Add department" style="display:none;">
+          + Add Department
+        </button>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- ── STUDENTS SECTION ──────────────────────────────────────────────── -->
+      <section id="section-students" class="section active">
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon indigo">👨‍🎓</div>
+            <div>
+              <div class="stat-value" id="stat-total-students">—</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon violet">🏛️</div>
+            <div>
+              <div class="stat-value" id="stat-total-depts">—</div>
+              <div class="stat-label">Departments</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cyan">📚</div>
+            <div>
+              <div class="stat-value" id="stat-courses">—</div>
+              <div class="stat-label">Unique Courses</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon emerald">🌍</div>
+            <div>
+              <div class="stat-value" id="stat-countries">—</div>
+              <div class="stat-label">Countries</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Table Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">All Students</div>
+            <div class="panel-actions">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="student-search" placeholder="Search by name or email…"
+                       oninput="filterStudents(this.value)" />
+              </div>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table id="students-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Course</th>
+                  <th>Department</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-tbody">
+                <tr><td colspan="7">
+                  <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>Loading students…</p>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DEPARTMENTS SECTION ───────────────────────────────────────────── -->
+      <section id="section-departments" class="section">
+
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <div class="stat-icon violet">🏛️</div>
+            <div>
+              <div class="stat-value" id="stat-dept-count2">—</div>
+              <div class="stat-label">Total Departments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">All Departments</div>
+          </div>
+          <div class="dept-grid" id="dept-grid">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL: Add / Edit Student
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="student-modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="student-modal-title">Add Student</div>
+      <button class="modal-close" onclick="closeStudentModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="student-form" novalidate>
+        <input type="hidden" id="edit-student-id" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="s-name">Full Name *</label>
+            <input id="s-name" name="name" type="text" class="form-control" placeholder="Arpit Sahu" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-email">Email *</label>
+            <input id="s-email" name="email" type="email" class="form-control" placeholder="arpit@example.com" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="s-course">Course *</label>
+            <input id="s-course" name="course" type="text" class="form-control" placeholder="B.Tech" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-dept">Department *</label>
+            <select id="s-dept" name="departmentId" class="form-control" required>
+              <option value="">Select department…</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;">
+          Address
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="s-city">City</label>
+            <input id="s-city" name="city" type="text" class="form-control" placeholder="Bangalore" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-state">State</label>
+            <input id="s-state" name="state" type="text" class="form-control" placeholder="Karnataka" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s-country">Country</label>
+          <input id="s-country" name="country" type="text" class="form-control" placeholder="India" />
+        </div>
+
+        <div id="student-form-error" class="alert alert-error" style="display:none;margin-top:8px;">
+          <span class="alert-icon">⚠️</span><span id="student-form-error-text"></span>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeStudentModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-student-btn" onclick="saveStudent()">
+        <div class="btn-spinner"></div>
+        <span class="btn-text">Save Student</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL: Add Department
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="dept-modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Department</div>
+      <button class="modal-close" onclick="closeDeptModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="dept-name">Department Name *</label>
+        <input id="dept-name" type="text" class="form-control"
+               placeholder="e.g. Computer Science" required />
+      </div>
+      <div id="dept-form-error" class="alert alert-error" style="display:none;">
+        <span class="alert-icon">⚠️</span><span id="dept-form-error-text"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeDeptModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-dept-btn" onclick="saveDepartment()">
+        <div class="btn-spinner"></div>
+        <span class="btn-text">Create Department</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL: Delete Confirmation
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay confirm-modal" id="delete-modal-overlay">
+  <div class="modal">
+    <div class="modal-body confirm-body">
+      <div class="confirm-icon">🗑️</div>
+      <div class="confirm-title">Delete Student?</div>
+      <p class="confirm-text">
+        This will permanently delete <strong id="delete-student-name">this student</strong>.
+        This action cannot be undone.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">
+        <div class="btn-spinner"></div>
+        <span class="btn-text">Delete</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>
