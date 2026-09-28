@@ -88,7 +88,7 @@ function getToastContainer() {
   return toastContainer;
 }
 
-const TOAST_ICONS = { success: '✅', error: '❌', info: 'ℹ️' };
+const TOAST_ICONS = { success: '&#10003;', error: '&#10007;', info: 'i' };
 
 export function showToast(message, type = 'info', duration = 3500) {
   const container = getToastContainer();

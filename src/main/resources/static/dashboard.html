@@ -11,41 +11,35 @@
 <!-- Loading Overlay -->
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-ring"></div>
-  <div class="loading-text">Loading dashboard…</div>
+  <div class="loading-text">Loading...</div>
 </div>
 
 <div class="app-layout">
 
-  <!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="sidebar-brand-icon">🎓</div>
-      <div>
-        <div class="sidebar-brand-name">StudentMS</div>
-        <div class="sidebar-brand-sub">Management System</div>
-      </div>
+      <div class="sidebar-brand-name">StudentMS</div>
+      <div class="sidebar-brand-sub">Management System</div>
     </div>
 
     <nav class="sidebar-nav">
       <div class="sidebar-nav-label">Main</div>
 
       <div class="nav-item active" id="nav-students" onclick="switchSection('students')">
-        <span class="nav-icon">👨‍🎓</span>
         <span>Students</span>
         <span class="nav-badge" id="nav-student-count">0</span>
       </div>
 
       <div class="nav-item" id="nav-departments" onclick="switchSection('departments')">
-        <span class="nav-icon">🏛️</span>
         <span>Departments</span>
         <span class="nav-badge" id="nav-dept-count">0</span>
       </div>
 
       <div class="sidebar-nav-label">Resources</div>
       <div class="nav-item" onclick="window.open('/swagger-ui.html','_blank')">
-        <span class="nav-icon">📄</span>
         <span>API Docs</span>
-        <span style="font-size:10px;color:var(--text-muted);margin-left:auto;">↗</span>
+        <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">↗</span>
       </div>
     </nav>
 
@@ -53,15 +47,15 @@
       <div class="sidebar-user">
         <div class="sidebar-avatar" id="user-avatar">A</div>
         <div class="sidebar-user-info">
-          <div class="sidebar-user-name" id="user-email">Loading…</div>
+          <div class="sidebar-user-name" id="user-email">Loading...</div>
           <div class="sidebar-user-role" id="user-role">—</div>
         </div>
-        <button class="btn-logout" title="Logout" onclick="logout()">⏻</button>
+        <button class="btn-logout" title="Logout" onclick="logout()">&#9211;</button>
       </div>
     </div>
   </aside>
 
-  <!-- ── Main Content ─────────────────────────────────────────────────────── -->
+  <!-- Main Content -->
   <div class="main-content">
 
     <!-- Top Bar -->
@@ -73,11 +67,11 @@
       <div class="top-bar-actions">
         <span id="role-badge" class="badge"></span>
         <button id="btn-add-student" class="btn btn-primary btn-sm"
-                onclick="openStudentModal()" title="Add new student" style="display:none;">
+                onclick="openStudentModal()" style="display:none;">
           + Add Student
         </button>
         <button id="btn-add-dept" class="btn btn-primary btn-sm"
-                onclick="openDeptModal()" title="Add department" style="display:none;">
+                onclick="openDeptModal()" style="display:none;">
           + Add Department
         </button>
       </div>
@@ -85,34 +79,41 @@
 
     <div class="content-area">
 
-      <!-- ── STUDENTS SECTION ──────────────────────────────────────────────── -->
+      <!-- STUDENTS SECTION -->
       <section id="section-students" class="section active">
 
-        <!-- Stats -->
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon indigo">👨‍🎓</div>
+            <div class="stat-icon-box sky">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
             <div>
               <div class="stat-value" id="stat-total-students">—</div>
               <div class="stat-label">Total Students</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon violet">🏛️</div>
+            <div class="stat-icon-box blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
             <div>
               <div class="stat-value" id="stat-total-depts">—</div>
               <div class="stat-label">Departments</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon cyan">📚</div>
+            <div class="stat-icon-box teal">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
             <div>
               <div class="stat-value" id="stat-courses">—</div>
               <div class="stat-label">Unique Courses</div>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon emerald">🌍</div>
+            <div class="stat-icon-box slate">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
             <div>
               <div class="stat-value" id="stat-countries">—</div>
               <div class="stat-label">Countries</div>
@@ -120,14 +121,13 @@
           </div>
         </div>
 
-        <!-- Student Table Panel -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title">All Students</div>
             <div class="panel-actions">
               <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="student-search" placeholder="Search by name or email…"
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="student-search" placeholder="Search by name or email..."
                        oninput="filterStudents(this.value)" />
               </div>
             </div>
@@ -148,8 +148,7 @@
               <tbody id="students-tbody">
                 <tr><td colspan="7">
                   <div class="empty-state">
-                    <div class="empty-state-icon">⏳</div>
-                    <p>Loading students…</p>
+                    <p>Loading students...</p>
                   </div>
                 </td></tr>
               </tbody>
@@ -158,12 +157,14 @@
         </div>
       </section>
 
-      <!-- ── DEPARTMENTS SECTION ───────────────────────────────────────────── -->
+      <!-- DEPARTMENTS SECTION -->
       <section id="section-departments" class="section">
 
         <div class="stats-grid" style="margin-bottom:24px;">
           <div class="stat-card">
-            <div class="stat-icon violet">🏛️</div>
+            <div class="stat-icon-box blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
             <div>
               <div class="stat-value" id="stat-dept-count2">—</div>
               <div class="stat-label">Total Departments</div>
@@ -175,9 +176,7 @@
           <div class="panel-header">
             <div class="panel-title">All Departments</div>
           </div>
-          <div class="dept-grid" id="dept-grid">
-            <!-- Filled by JS -->
-          </div>
+          <div class="dept-grid" id="dept-grid"></div>
         </div>
       </section>
 
@@ -186,14 +185,12 @@
 </div><!-- /app-layout -->
 
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     MODAL: Add / Edit Student
-════════════════════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Add / Edit Student -->
 <div class="modal-overlay" id="student-modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="student-modal-title">Add Student</div>
-      <button class="modal-close" onclick="closeStudentModal()">✕</button>
+      <button class="modal-close" onclick="closeStudentModal()">&#10005;</button>
     </div>
     <div class="modal-body">
       <form id="student-form" novalidate>
@@ -202,47 +199,45 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="s-name">Full Name *</label>
-            <input id="s-name" name="name" type="text" class="form-control" placeholder="Arpit Sahu" required />
+            <input id="s-name" name="name" type="text" class="form-control" placeholder="Full name" required />
           </div>
           <div class="form-group">
             <label class="form-label" for="s-email">Email *</label>
-            <input id="s-email" name="email" type="email" class="form-control" placeholder="arpit@example.com" required />
+            <input id="s-email" name="email" type="email" class="form-control" placeholder="email@example.com" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="s-course">Course *</label>
-            <input id="s-course" name="course" type="text" class="form-control" placeholder="B.Tech" required />
+            <input id="s-course" name="course" type="text" class="form-control" placeholder="e.g. B.Tech" required />
           </div>
           <div class="form-group">
             <label class="form-label" for="s-dept">Department *</label>
             <select id="s-dept" name="departmentId" class="form-control" required>
-              <option value="">Select department…</option>
+              <option value="">Select department...</option>
             </select>
           </div>
         </div>
 
-        <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;">
-          Address
-        </div>
+        <div class="form-section-label">Address (optional)</div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="s-city">City</label>
-            <input id="s-city" name="city" type="text" class="form-control" placeholder="Bangalore" />
+            <input id="s-city" name="city" type="text" class="form-control" placeholder="City" />
           </div>
           <div class="form-group">
             <label class="form-label" for="s-state">State</label>
-            <input id="s-state" name="state" type="text" class="form-control" placeholder="Karnataka" />
+            <input id="s-state" name="state" type="text" class="form-control" placeholder="State" />
           </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="s-country">Country</label>
-          <input id="s-country" name="country" type="text" class="form-control" placeholder="India" />
+          <input id="s-country" name="country" type="text" class="form-control" placeholder="Country" />
         </div>
 
         <div id="student-form-error" class="alert alert-error" style="display:none;margin-top:8px;">
-          <span class="alert-icon">⚠️</span><span id="student-form-error-text"></span>
+          <span id="student-form-error-text"></span>
         </div>
       </form>
     </div>
@@ -256,14 +251,12 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     MODAL: Add Department
-════════════════════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Add Department -->
 <div class="modal-overlay" id="dept-modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">Add Department</div>
-      <button class="modal-close" onclick="closeDeptModal()">✕</button>
+      <button class="modal-close" onclick="closeDeptModal()">&#10005;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -272,7 +265,7 @@
                placeholder="e.g. Computer Science" required />
       </div>
       <div id="dept-form-error" class="alert alert-error" style="display:none;">
-        <span class="alert-icon">⚠️</span><span id="dept-form-error-text"></span>
+        <span id="dept-form-error-text"></span>
       </div>
     </div>
     <div class="modal-footer">
@@ -285,13 +278,10 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     MODAL: Delete Confirmation
-════════════════════════════════════════════════════════════════════════════ -->
+<!-- MODAL: Delete Confirmation -->
 <div class="modal-overlay confirm-modal" id="delete-modal-overlay">
   <div class="modal">
     <div class="modal-body confirm-body">
-      <div class="confirm-icon">🗑️</div>
       <div class="confirm-title">Delete Student?</div>
       <p class="confirm-text">
         This will permanently delete <strong id="delete-student-name">this student</strong>.

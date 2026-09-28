@@ -88,7 +88,6 @@ async function loadStudents() {
     document.getElementById('students-tbody').innerHTML = `
       <tr><td colspan="7">
         <div class="empty-state">
-          <div class="empty-state-icon">⚠️</div>
           <p>Failed to load students: ${err.message}</p>
         </div>
       </td></tr>`;
@@ -109,7 +108,6 @@ function renderStudents(students) {
     tbody.innerHTML = `
       <tr><td colspan="7">
         <div class="empty-state">
-          <div class="empty-state-icon">👨‍🎓</div>
           <p>No students found. ${isAdmin ? 'Click <b>+ Add Student</b> to create one.' : ''}</p>
         </div>
       </td></tr>`;
@@ -122,9 +120,9 @@ function renderStudents(students) {
       ? [s.address.city, s.address.state, s.address.country].filter(Boolean).join(', ')
       : '—';
     const actionBtns = isAdmin
-      ? `<button class="btn btn-outline btn-sm btn-icon" title="Edit"   onclick="openEditModal(${s.id})">✏️</button>
-         <button class="btn btn-danger  btn-sm btn-icon" title="Delete" onclick="openDeleteModal(${s.id}, '${escHtml(s.name)}')">🗑️</button>`
-      : `<button class="btn btn-outline btn-sm btn-icon" title="View"   onclick="openEditModal(${s.id})">👁️</button>`;
+      ? `<button class="btn btn-outline btn-sm" title="Edit"   onclick="openEditModal(${s.id})">Edit</button>
+         <button class="btn btn-danger  btn-sm" title="Delete" onclick="openDeleteModal(${s.id}, '${escHtml(s.name)}')">Delete</button>`
+      : `<button class="btn btn-outline btn-sm" title="View"   onclick="openEditModal(${s.id})">View</button>`;
 
     return `
       <tr>
@@ -285,32 +283,28 @@ async function loadDepartments() {
     document.getElementById('stat-dept-count2').textContent  = allDepts.length;
   } catch (err) {
     document.getElementById('dept-grid').innerHTML =
-      `<p style="color:var(--text-muted);padding:24px;">Failed to load departments.</p>`;
+      `<p style="color:var(--text-muted);padding:24px 22px;">Failed to load departments.</p>`;
   }
 }
-
-const DEPT_ICONS = ['🏛️','💻','⚗️','📐','📊','🔬','🎨','⚙️','📖','🌐'];
 
 function renderDepartments(depts) {
   const grid = document.getElementById('dept-grid');
 
-  const cards = depts.map((d, i) => `
+  const cards = depts.map((d) => `
     <div class="dept-card">
-      <div class="dept-card-icon">${DEPT_ICONS[i % DEPT_ICONS.length]}</div>
       <div class="dept-card-name">${escHtml(d.name)}</div>
       <div class="dept-card-id">ID #${d.id}</div>
     </div>`).join('');
 
   const addCard = isAdmin ? `
     <div class="dept-add-card" onclick="openDeptModal()">
-      <div class="dept-add-icon">➕</div>
-      <div class="dept-add-text">Add Department</div>
+      <div class="dept-add-text">+ Add Department</div>
     </div>` : '';
 
   grid.innerHTML = cards + addCard;
 
   if (!depts.length && !isAdmin) {
-    grid.innerHTML = `<p style="color:var(--text-muted);padding:24px 0;">No departments found.</p>`;
+    grid.innerHTML = `<p style="color:var(--text-muted);padding:24px 22px;">No departments found.</p>`;
   }
 }
 

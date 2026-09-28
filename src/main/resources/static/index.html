@@ -12,21 +12,14 @@
 <div class="auth-wrapper">
   <div class="auth-card">
 
-    <!-- Logo -->
     <div class="auth-logo">
-      <div class="auth-logo-icon">🎓</div>
-      <div>
-        <div class="auth-logo-text">Student<span>MS</span></div>
-        <div style="font-size:11px;color:var(--text-muted);">Management System</div>
-      </div>
+      <div class="auth-logo-wordmark">Student<span>MS</span></div>
     </div>
 
-    <h1 class="auth-title">Welcome back</h1>
-    <p class="auth-subtitle">Sign in to your account to continue</p>
+    <h1 class="auth-title">Sign in</h1>
+    <p class="auth-subtitle">Enter your credentials to continue</p>
 
-    <!-- Error Alert -->
     <div id="login-error" class="alert alert-error" style="display:none;">
-      <span class="alert-icon">⚠️</span>
       <span id="login-error-text"></span>
     </div>
 
@@ -34,7 +27,7 @@
       <div class="form-group">
         <label class="form-label" for="email">Email address</label>
         <input id="email" name="email" type="email" class="form-control"
-               placeholder="arpit@example.com" required autocomplete="email" />
+               placeholder="you@example.com" required autocomplete="email" />
       </div>
 
       <div class="form-group">
@@ -45,16 +38,12 @@
 
       <button id="login-btn" type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">
         <div class="btn-spinner"></div>
-        <span class="btn-text">Sign in →</span>
+        <span class="btn-text">Sign in</span>
       </button>
     </form>
 
     <p class="auth-footer">
       Don't have an account? <a href="/register.html">Create one</a>
-    </p>
-
-    <p class="auth-footer" style="margin-top:10px;font-size:11px;opacity:.5;">
-      💡 Default admin: create via DB or register + manually set role to ADMIN
     </p>
   </div>
 </div>
@@ -62,7 +51,7 @@
 <script type="module">
   import { setToken, requireGuest, showToast, setLoading, api } from '/js/api.js';
 
-  requireGuest();   // redirect to dashboard if already logged in
+  requireGuest();
 
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -84,7 +73,7 @@
     try {
       const data = await api.post('/api/v1/auth/login', { email, password });
       setToken(data.token);
-      showToast(`Welcome back! Logged in as ${data.role}`, 'success');
+      showToast(`Logged in as ${data.role}`, 'success');
       setTimeout(() => window.location.href = '/dashboard.html', 600);
     } catch (err) {
       errText.textContent = err.message || 'Invalid credentials. Please try again.';
@@ -94,7 +83,6 @@
     }
   });
 
-  // Press Enter in any field submits
   document.querySelectorAll('.form-control').forEach(el => {
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('login-form').requestSubmit();

@@ -13,35 +13,29 @@
   <div class="auth-card" style="max-width:540px;">
 
     <div class="auth-logo">
-      <div class="auth-logo-icon">🎓</div>
-      <div>
-        <div class="auth-logo-text">Student<span>MS</span></div>
-        <div style="font-size:11px;color:var(--text-muted);">Create your account</div>
-      </div>
+      <div class="auth-logo-wordmark">Student<span>MS</span></div>
     </div>
 
     <h1 class="auth-title">Create account</h1>
     <p class="auth-subtitle">Fill in your details to get started</p>
 
     <div id="reg-alert" class="alert" style="display:none;">
-      <span class="alert-icon" id="reg-alert-icon"></span>
       <span id="reg-alert-text"></span>
     </div>
 
     <form id="reg-form" novalidate>
 
-      <!-- Account credentials -->
       <div class="auth-section-title">Account</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="name">Full name</label>
           <input id="name" name="name" type="text" class="form-control"
-                 placeholder="Arpit Sahu" required />
+                 placeholder="Your name" required />
         </div>
         <div class="form-group">
           <label class="form-label" for="email">Email address</label>
           <input id="email" name="email" type="email" class="form-control"
-                 placeholder="arpit@example.com" required />
+                 placeholder="you@example.com" required />
         </div>
       </div>
 
@@ -54,37 +48,36 @@
         <div class="form-group">
           <label class="form-label" for="course">Course / Programme</label>
           <input id="course" name="course" type="text" class="form-control"
-                 placeholder="B.Tech" required />
+                 placeholder="e.g. B.Tech" required />
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="departmentId">Department</label>
         <select id="departmentId" name="departmentId" class="form-control" required>
-          <option value="">Select department…</option>
+          <option value="">Select department...</option>
         </select>
       </div>
 
-      <!-- Address -->
       <div class="auth-section-title">Address</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="city">City</label>
-          <input id="city" name="city" type="text" class="form-control" placeholder="Bangalore" />
+          <input id="city" name="city" type="text" class="form-control" placeholder="City" />
         </div>
         <div class="form-group">
           <label class="form-label" for="state">State</label>
-          <input id="state" name="state" type="text" class="form-control" placeholder="Karnataka" />
+          <input id="state" name="state" type="text" class="form-control" placeholder="State" />
         </div>
       </div>
       <div class="form-group">
         <label class="form-label" for="country">Country</label>
-        <input id="country" name="country" type="text" class="form-control" placeholder="India" />
+        <input id="country" name="country" type="text" class="form-control" placeholder="Country" />
       </div>
 
       <button id="reg-btn" type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">
         <div class="btn-spinner"></div>
-        <span class="btn-text">Create Account →</span>
+        <span class="btn-text">Create Account</span>
       </button>
     </form>
 
@@ -97,7 +90,6 @@
 
   requireGuest();
 
-  // Load departments into the select dropdown
   async function loadDepartments() {
     try {
       const depts = await api.get('/api/departments');
@@ -108,9 +100,7 @@
         opt.textContent = d.name;
         select.appendChild(opt);
       });
-    } catch {
-      // If no departments yet, show placeholder only
-    }
+    } catch { }
   }
 
   loadDepartments();
@@ -118,9 +108,7 @@
   function showAlert(msg, type = 'error') {
     const div  = document.getElementById('reg-alert');
     const text = document.getElementById('reg-alert-text');
-    const icon = document.getElementById('reg-alert-icon');
     div.className = `alert alert-${type}`;
-    icon.textContent = type === 'error' ? '⚠️' : '✅';
     text.textContent = msg;
     div.style.display = 'flex';
   }
@@ -155,7 +143,7 @@
     setLoading(btn, true);
     try {
       await api.post('/api/v1/auth/register', body);
-      showAlert('Account created! Redirecting to login…', 'success');
+      showAlert('Account created! Redirecting to login...', 'success');
       setTimeout(() => window.location.href = '/index.html', 1800);
     } catch (err) {
       showAlert(err.message || 'Registration failed. Please try again.');
