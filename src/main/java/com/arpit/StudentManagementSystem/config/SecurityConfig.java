@@ -60,8 +60,8 @@ public class SecurityConfig {
                         // ── Department endpoints ──────────────────────────────
                         // Only ADMINs can create departments
                         .requestMatchers(HttpMethod.POST, "/api/departments").hasRole("ADMIN")
-                        // Any authenticated user can read departments
-                        .requestMatchers(HttpMethod.GET, "/api/departments/**").authenticated()
+                        // GET departments is public — needed by the Register page (no token yet)
+                        .requestMatchers(HttpMethod.GET, "/api/departments/**").permitAll()
 
                         // ── Student endpoints ─────────────────────────────────
                         // Only ADMINs can create or delete students directly
